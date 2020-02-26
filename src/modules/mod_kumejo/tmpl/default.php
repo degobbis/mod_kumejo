@@ -15,20 +15,20 @@ use Joomla\CMS\HTML\HTMLHelper;
 HTMLHelper::_('script', '/modules/mod_kumejo/js/iframeResizer.min.js', array('version' => 'auto', 'relative' => true), array('async' => 'async')); ?>
 
 <style>
-	iframe#blockrandom-<?php echo $id; ?> {
+	iframe#kumejo-serp-<?php echo $id; ?> {
 		width: 1px;
 		min-width: 100%;
 	}
 </style>
 
-<iframe id="blockrandom-<?php echo $id; ?>"
+<iframe id="kumejo-serp-<?php echo $id; ?>"
 		src="<?php echo $url; ?>"
-		width="<?php echo $width; ?>"
-		scrolling="<?php echo $scroll; ?>"
-		frameborder="<?php echo $frameborder; ?>"
+		width="100%"
+		scrolling="auto"
+		frameborder="0"
 >
 </iframe>
 
 <script type="text/javascript">
-		iFrameResize({},'#blockrandom-<?php echo $id; ?>');
+		iFrameResize({},'#kumejo-serp-<?php echo $id; ?>');
 </script>

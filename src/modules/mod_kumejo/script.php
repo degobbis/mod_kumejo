@@ -1,11 +1,11 @@
 <?php
 /**
- * @package     Joomla.Site
- * @subpackage  mod_kumejo
+ * @package         Joomla.Site
+ * @subpackage      mod_kumejo
  *
- * @author      Guido De Gobbis <domainservice@kunze-medien.de>
+ * @author          Guido De Gobbis <domainservice@kunze-medien.de>
  * @copyright   (c) 2020 Guido De Gobbis - All rights reserved.
- * @license     GNU General Public License version 3 or later
+ * @license         GNU General Public License version 3 or later
  */
 
 defined('_JEXEC') or die;
@@ -22,135 +22,114 @@ use Joomla\CMS\Language\Text;
  */
 class ModKumejoInstallerScript
 {
-    /**
-     * Minimum Joomla version to install
-     *
-     * @var   string
-     *
-     * @since   1.0.0
-     */
-    public $minimumJoomla = '3.9';
-    /**
-     * Minimum PHP version to install
-     *
-     * @var   string
-     *
-     * @since   1.0.0
-     */
-    public $minimumPhp = '7.1';
+	/**
+	 * Minimum Joomla version to install
+	 *
+	 * @var   string
+	 *
+	 * @since   1.0.0
+	 */
+	public $minimumJoomla = '3.9';
+	/**
+	 * Minimum PHP version to install
+	 *
+	 * @var   string
+	 *
+	 * @since   1.0.0
+	 */
+	public $minimumPhp = '7.1';
 
-    /**
-     * Function to act prior to installation process begins
-     *
-     * @param   string      $action     Which action is happening (install|uninstall|discover_install|update)
-     * @param   JInstaller  $installer  The class calling this method
-     *
-     * @return   boolean  True on success
-     * @throws   Exception
-     *
-     * @since   1.0.0
-     */
-    public function preflight($action, $installer)
-    {
-        $notDeleted = '';
-        $app        = Factory::getApplication();
-        $pluginPath = JPATH_BASE . '/modules/mod_kumejo';
+	/**
+	 * Function to act prior to installation process begins
+	 *
+	 * @param string     $action    Which action is happening (install|uninstall|discover_install|update)
+	 * @param JInstaller $installer The class calling this method
+	 *
+	 * @return   boolean  True on success
+	 * @throws   Exception
+	 *
+	 * @since   1.0.0
+	 */
+	public function preflight($action, $installer)
+	{
+		$notDeleted = '';
+		$app        = Factory::getApplication();
+		$pluginPath = JPATH_BASE . '/modules/mod_kumejo';
 
-        Factory::getLanguage()->load('mod_kumejo', dirname(__FILE__));
+		Factory::getLanguage()->load('mod_kumejo', dirname(__FILE__));
 
-        if (version_compare(PHP_VERSION, $this->minimumPhp, 'lt'))
-        {
-            $app->enqueueMessage(Text::sprintf('MOD_KUMEJO_SCRIPT_MINPHPVERSION', $this->minimumPhp), 'error');
+		if (version_compare(PHP_VERSION, $this->minimumPhp, 'lt'))
+		{
+			$app->enqueueMessage(Text::sprintf('MOD_KUMEJO_SCRIPT_MINPHPVERSION', $this->minimumPhp), 'error');
 
-            return false;
-        }
+			return false;
+		}
 
-        if (version_compare(JVERSION, $this->minimumJoomla, 'lt'))
-        {
-            $app->enqueueMessage(Text::sprintf('MOD_KUMEJO_SCRIPT_MINJVERSION', $this->minimumJoomla), 'error');
+		if (version_compare(JVERSION, $this->minimumJoomla, 'lt'))
+		{
+			$app->enqueueMessage(Text::sprintf('MOD_KUMEJO_SCRIPT_MINJVERSION', $this->minimumJoomla), 'error');
 
-            return false;
-        }
+			return false;
+		}
 
-        if ($action === 'update')
-        {
-            $deletes = [];
+		if ($action === 'update')
+		{
+			$deletes = [];
 
-            $deletes['folder'] = array(
-                // before 3.0.0-rc31
-                $pluginPath . '/assets/fields',
-                $pluginPath . '/assets/frameworks',
-                $pluginPath . '/assets/j3.7.x',
-                $pluginPath . '/assets/j3.8.x',
-                $pluginPath . '/assets/rules',
-                $pluginPath . '/assets/js/system',
-                $pluginPath . '/libraries/frameworks',
-            );
+			$deletes['folder'] = array();
 
-            $deletes['file'] = array(
-                // before 3.0.0-rc31
-                $pluginPath . '/assets/file.php',
-                $pluginPath . '/layouts/joomla/form/renderfield.bs3.php',
-                $pluginPath . '/layouts/joomla/form/renderfield.uikit.php',
-                $pluginPath . '/layouts/joomla/form/renderfield.uikit3.php',
-                $pluginPath . '/layouts/jtf/form.bs3.php',
-                $pluginPath . '/layouts/jtf/form.uikit3.php',
-                JPATH_ROOT . '/administrator/language/de-DE/de-DE.plg_content_jtf.ini',
-                JPATH_ROOT . '/administrator/language/de-DE/de-DE.plg_content_jtf.sys.ini',
-                JPATH_ROOT . '/administrator/language/en-GB/en-GB.plg_content_jtf.ini',
-                JPATH_ROOT . '/administrator/language/en-GB/en-GB.plg_content_jtf.sys.ini',
-            );
+			$deletes['file'] = array();
 
-            foreach ($deletes as $key => $orphans)
-            {
-                $notDeleted .= $this->deleteOrphans($key, $orphans);
-            }
+			foreach ($deletes as $key => $orphans)
+			{
+				$notDeleted .= $this->deleteOrphans($key, $orphans);
+			}
 
-            if (!empty($notDeleted))
-            {
-                $app->enqueueMessage($notDeleted, 'error');
-            }
-        }
+			if (!empty($notDeleted))
+			{
+				$app->enqueueMessage($notDeleted, 'error');
+			}
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    /**
-     * @param   string  $type     Wich type are orphans of (file or folder)
-     * @param   array   $orphans  Array of files or folders to delete
-     *
-     * @return   string
-     *
-     * @since   1.0.0
-     */
-    private function deleteOrphans($type, array $orphans)
-    {
-        $notDeleted = '';
+	/**
+	 * @param string $type    Wich type are orphans of (file or folder)
+	 * @param array  $orphans Array of files or folders to delete
+	 *
+	 * @return   string
+	 *
+	 * @since   1.0.0
+	 */
+	private function deleteOrphans($type, array $orphans)
+	{
+		$notDeleted = '';
 
-        foreach ($orphans as $item)
-        {
-            if ($type == 'folder')
-            {
-                if (is_dir($item))
-                {
-                    if (Folder::delete($item) === false)
-                    {
-                        $notDeleted .= Text::sprintf('MOD_KUMEJO_SCRIPT_NOT_DELETED', $item);
-                    }
-                }
-            }
-            if ($type == 'file')
-            {
-                if (is_file($item))
-                {
-                    if (File::delete($item) === false)
-                    {
-                        $notDeleted .= Text::sprintf('MOD_KUMEJO_SCRIPT_NOT_DELETED', $item);
-                    }
-                }
-            }
-        }
+		foreach ($orphans as $item)
+		{
+			if ($type == 'folder')
+			{
+				if (is_dir($item))
+				{
+					if (Folder::delete($item) === false)
+					{
+						$notDeleted .= Text::sprintf('MOD_KUMEJO_SCRIPT_NOT_DELETED', $item);
+					}
+				}
+			}
+			if ($type == 'file')
+			{
+				if (is_file($item))
+				{
+					if (File::delete($item) === false)
+					{
+						$notDeleted .= Text::sprintf('MOD_KUMEJO_SCRIPT_NOT_DELETED', $item);
+					}
+				}
+			}
+		}
 
-        return $notDeleted;
-    }
+		return $notDeleted;
+	}
 }

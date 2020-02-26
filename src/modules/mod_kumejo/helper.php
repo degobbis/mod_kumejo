@@ -28,15 +28,8 @@ class ModKumejoHelper
 	 */
 	public static function getParams(&$params)
 	{
-		$params->def('url', '');
-		$params->def('scrolling', 'auto');
-		$params->def('height', '200');
-		$params->def('height_auto', 0);
-		$params->def('width', '100%');
-		$params->def('add', 1);
-		$params->def('name', 'kumejo');
-
-		$url = $params->get('url');
+		$url = 'https://';
+		$url = $params->get('provider', 'kumejo.de');
 
 		if ($params->get('add'))
 		{
@@ -63,7 +56,7 @@ class ModKumejoHelper
 		}
 
 		$params->set('load', $load);
-		$params->set('url', $url);
+		$params->def('url', $url);
 
 		return $params;
 	}
