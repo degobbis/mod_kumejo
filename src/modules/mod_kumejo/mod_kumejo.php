@@ -12,20 +12,24 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Helper\ModuleHelper;
 
-// Include the kumejo functions only once
-JLoader::register('ModKumejoHelper', __DIR__ . '/helper.php');
+if ($params->get('provider', 0) == 0 || (int) $params->get('userId', '') == 0)
+{
+	return;
+}
 
-$params = ModKumejoHelper::getParams($params);
+$url = 'http://';
+$url .= $params->get('provider');
+$url .= '/jobsuche.html?tmpl=component#';
+$url .= 'attr.author.value=' . (int) $params->get('userId');
+$url .= '&sort=' . $params->get('sort', 'name');
+$url .= '&sortdir=' . $params->get('sortdir', 'desc');
+$url .= '&limiter=' . (int) $params->get('limiter', 4);
 
-$load            = $params->get('load');
-$url             = htmlspecialchars($params->get('url'), ENT_COMPAT, 'UTF-8');
-$target          = htmlspecialchars($params->get('target'), ENT_COMPAT, 'UTF-8');
-$width           = htmlspecialchars($params->get('width'), ENT_COMPAT, 'UTF-8');
-$height          = htmlspecialchars($params->get('height'), ENT_COMPAT, 'UTF-8');
-$scroll          = htmlspecialchars($params->get('scrolling'), ENT_COMPAT, 'UTF-8');
+$url             = htmlspecialchars($url, ENT_COMPAT, 'UTF-8');
 $moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'), ENT_COMPAT, 'UTF-8');
-$frameborder     = htmlspecialchars($params->get('frameborder'), ENT_COMPAT, 'UTF-8');
-$ititle          = $module->title;
+$headerTag       = $params->get('header_tag', 'h3');
+$headerClass     = $params->get('header_class', '');
+$headerClass     = $headerClass != '' ? ' class="' . $headerClass . '"' : '';
 $id              = $module->id;
 
 require ModuleHelper::getLayoutPath('mod_kumejo', $params->get('layout', 'default'));

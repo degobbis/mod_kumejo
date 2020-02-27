@@ -11,7 +11,10 @@
 
 	<files>
 		<filename module="mod_kumejo">mod_kumejo.php</filename>
-		##FILES##
+		<filename>script.php</filename>
+		<folder>js</folder>
+		<folder>language</folder>
+		<folder>tmpl</folder>
 	</files>
 
 	<scriptfile>script.php</scriptfile>
@@ -29,7 +32,7 @@
 						description="MOD_KUMEJO_FIELD_PROVIDER_DESC"
 				>
 					<option value="0">MOD_KUMEJO_FIELD_PROVIDER_OPTION_NONE</option>
-					<option value="1">kumejo.de</option>
+					<option value="kumejo.de">kumejo.de</option>
 				</field>
 
 				<field
@@ -39,6 +42,7 @@
 						description="MOD_KUMEJO_FIELD_USERID_DESC"
 						size="8"
 						filter="integer"
+						required="true"
 				/>
 
 				<field

@@ -12,7 +12,13 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\HTML\HTMLHelper;
 
-HTMLHelper::_('script', '/modules/mod_kumejo/js/iframeResizer.min.js', array('version' => 'auto', 'relative' => true), array('async' => 'async')); ?>
+HTMLHelper::_('script', 'modules/mod_kumejo/js/iframeResizer.min.js', array('version' => 'auto'), array('async' => 'async'));
+
+if ($module->showtitle) : ?>
+	<<?php echo $headerTag . $headerClass; ?>>
+		<?php echo $module->title; ?>
+	</<?php echo $headerTag; ?>>
+<?php endif; ?>
 
 <style>
 	iframe#kumejo-serp-<?php echo $id; ?> {
@@ -20,15 +26,15 @@ HTMLHelper::_('script', '/modules/mod_kumejo/js/iframeResizer.min.js', array('ve
 		min-width: 100%;
 	}
 </style>
-
 <iframe id="kumejo-serp-<?php echo $id; ?>"
+        allowfullscreen
+        class="kumejo-serp <?php echo $moduleclass_sfx?>"
 		src="<?php echo $url; ?>"
 		width="100%"
 		scrolling="auto"
 		frameborder="0"
 >
 </iframe>
-
 <script type="text/javascript">
-		iFrameResize({},'#kumejo-serp-<?php echo $id; ?>');
+		iFrameResize({log: true},'#kumejo-serp-<?php echo $id; ?>');
 </script>
