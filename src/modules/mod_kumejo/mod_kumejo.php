@@ -12,15 +12,18 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Helper\ModuleHelper;
 
-if ($params->get('provider', 0) == 0 || (int) $params->get('userId', '') == 0)
+$provider = $params->get('provider', 0);
+$userId   = (int) $params->get('userId', 0);
+
+if (empty($provider) || empty($userId))
 {
 	return;
 }
 
-$url = 'http://';
-$url .= $params->get('provider');
+$url = 'https://';
+$url .= $provider;
 $url .= '/jobsuche.html?tmpl=component#';
-$url .= 'attr.author.value=' . (int) $params->get('userId');
+$url .= 'attr.author.value=' . $userId;
 $url .= '&sort=' . $params->get('sort', 'name');
 $url .= '&sortdir=' . $params->get('sortdir', 'desc');
 $url .= '&limiter=' . (int) $params->get('limiter', 4);
