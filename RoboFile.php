@@ -20,9 +20,6 @@ require_once JPATH_BASE . '/vendor/autoload.php';
 
 class RoboFile extends \Robo\Tasks
 {
-	// Load tasks from composer, see composer.json
-	//use \joomla_projects\robo\loadTasks;
-	//use \Joomla\Jorobo\Tasks\loadTasks;
 	use loadTasks;
 
 	/**
@@ -72,5 +69,22 @@ class RoboFile extends \Robo\Tasks
 	{
 		//$this->taskMap($target)->run();
 		(new \Joomla\Jorobo\Tasks\Map($target))->run();
+	}
+
+	/**
+	 * Bump Version placeholder __DEPLOY_VERSION__ in this project. (Set the version up in the jorobo.ini)
+	 *
+	 * @return  void
+	 *
+	 * @since   1.0.0
+	 */
+	public function bump()
+	{
+		if (!file_exists('jorobo.ini'))
+		{
+			$this->_copy('jorobo.dist.ini', 'jorobo.ini');
+		}
+
+		(new \Joomla\Jorobo\Tasks\BumpVersion())->run();
 	}
 }
